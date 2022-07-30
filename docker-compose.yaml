@@ -4,7 +4,7 @@ services:
     build:
       context: ./
     image: gps-stuff:latest
-    command: ["/bin/bash"]
+    command: [ ]
     entrypoint: [ ]
     depends_on:
       - db
@@ -15,7 +15,7 @@ services:
     restart: always
     environment:
       POSTGRES_USER: root
-      POSTGRES_DB: playground
+      POSTGRES_DB: gps-stuff
     volumes:
       - db_data:/var/lib/postgresql
     ports:
