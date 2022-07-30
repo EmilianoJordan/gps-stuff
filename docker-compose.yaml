@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  shell:
+    build:
+      context: ./
+    image: gps-stuff:latest
+    command: ["/bin/bash"]
+    entrypoint: [ ]
+    depends_on:
+      - db
+    volumes:
+      - ./:/src
+  db:  # Port 5432
+    image: mdillon/postgis:9.6-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_DB: playground
+    volumes:
+      - db_data:/var/lib/postgresql
+    ports:
+      - 5432:5432
+
+volumes:
+  db_data:
