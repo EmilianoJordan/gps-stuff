@@ -12,7 +12,6 @@ services:
       - ./:/src
     env_file:
       - .flaskenv
-      -
   db:  # Port 5432
     image: postgres
     restart: always
