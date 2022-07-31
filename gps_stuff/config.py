@@ -6,6 +6,10 @@ in the repository.
 import os
 from urllib.parse import quote_plus
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 def _as_bool(value):
     if value:
@@ -23,7 +27,7 @@ def _get_db_url():
     if not DB_URL:
         DB_HOST = os.environ.get("DB_HOST", "db")
         DB_USER = os.environ.get("DB_USER", "root")
-        DB_PASS = os.environ.get("DB_PASS", "")
+        DB_PASS = os.environ.get("DB_PASS", "root")
         DB_PORT = os.environ.get("DB_PORT", "5432")
         DB_NAME = os.environ.get("DB_NAME", "gps-stuff")
         DB_DIALECT = os.environ.get("DB_DIALECT", "postgresql")
@@ -47,5 +51,7 @@ def _get_db_url():
 
 class Config:
     # database options
-    ALCHEMICAL_DATABASE_URL = _get_db_url()
-    ALCHEMICAL_ENGINE_OPTIONS = {"echo": _as_bool(os.environ.get("SQL_ECHO"))}
+    SQLALCHEMY_DATABASE_URI = _get_db_url()
+    SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get(
+        "SQLALCHEMY_TRACK_MODIFICATIONS", False
+    )

@@ -10,11 +10,15 @@ services:
       - db
     volumes:
       - ./:/src
+    env_file:
+      - .flaskenv
+      -
   db:  # Port 5432
-    image: mdillon/postgis:9.6-alpine
+    image: postgres
     restart: always
     environment:
       POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
       POSTGRES_DB: gps-stuff
     volumes:
       - db_data:/var/lib/postgresql
