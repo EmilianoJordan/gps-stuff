@@ -8,7 +8,6 @@ from sqlalchemy.exc import IntegrityError
 @click.group()
 def gps():
     """Utilities specifically for `gps_stuff`."""
-    pass
 
 
 @gps.group()
@@ -23,20 +22,18 @@ def user():
 @click.option(
     "-l", "--last-name", default="", help="Last name of the user to be added."
 )
+@click.option("-e", "--rwgps-email", default="", help="Strava Client ID of the User.")
+@click.option("-p", "--rwgps-password", default="", help="Strava Secret of the User.")
 @click.option(
-    "-i", "--strava-client-id", default=0, help="Strava Client ID of the User."
-)
-@click.option("-s", "--strava-secret", default="", help="Strava Secret of the User.")
-@click.option(
-    "-r", "--strava-refresh-token", default="", help="Strava Refresh Token of the User."
+    "-k", "--rwgps-api-key", default="", help="Strava Refresh Token of the User."
 )
 @with_appcontext
 def add(
     first_name: str,
     last_name: str,
-    strava_client_id: int,
-    strava_secret: str,
-    strava_refresh_token: str,
+    rwgps_email: str,
+    rwgps_password: str,
+    rwgps_api_key: str,
 ):
     """ """
     _locals = locals().copy()
@@ -50,7 +47,11 @@ def add(
 
     try:
         db.session.commit()
-    except IntegrityError:
+        click.echo(f"Added User {values}")
+        return
+    except IntegrityError as e:
+        click.echo(f"User Exists with values {values}")
+        click.echo(e)
         db.session.rollback()
 
     values = _get_values(**_locals, read_env=False)
@@ -65,7 +66,6 @@ def _get_values(read_env=False, **kwargs):
     if read_env:
 
         for key, value in kwarg_generator:
-
             if val := os.environ.get(key.upper()):
                 kwargs[key] = val
             else:
